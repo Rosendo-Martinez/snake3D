@@ -219,7 +219,6 @@ void drawCube()
             for (int x = STARTING_INDEX; x >= LAST_INDEX; x--)
             {   
                 glm::mat4 child = glm::mat4(1.0f);
-                // pretty sure arugment should be parent!
                 child = glm::translate(child, glm::vec3(x,y,z));
                 glm::mat4 model = glm::mat4(parent * child);
 
@@ -228,8 +227,6 @@ void drawCube()
             }
         }
     }
-    // std::cout << '\n';
-
 }
 
 void processInput(GLFWwindow *window)
