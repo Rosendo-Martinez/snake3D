@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <cmath>
 #include <iostream>
 
 // Screen dimensions
@@ -194,20 +195,66 @@ void drawCube()
     // wire frame mode (temp)
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
+    // glm::mat4 projection;
+    // projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    // glm::mat4 view = glm::mat4(1.0f);
+    // // note that we're translating the scene in the reverse direction of where we want to move
+    // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    // glm::mat4 model = glm::mat4(1.0f);
+    // model = glm::rotate(model, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
+    // model = glm::rotate(model, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
+
+    // glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    // glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    // glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+    // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+    // parentM (can just be identy)
+
+    // for each wall
+        // for each col
+            // for each row
+                // matrix = parentM * childM
+                // draw cube with matrix as coordinte system local to child
+
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    glm::mat4 view = glm::mat4(1.0f);
-    // note that we're translating the scene in the reverse direction of where we want to move
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
-    model = glm::rotate(model, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
-
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glm::mat4 view = glm::mat4(1.0f);
+    // note that we're translating the scene in the reverse direction of where we want to move
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+
+    
+    const unsigned int SIZE_OF_CUBE = 3;
+    const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0);
+    const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1);
+    glm::mat4 parent = glm::mat4(1.0f);
+
+    for (int z = STARTING_INDEX; z >= LAST_INDEX; z--) // wall (z)
+    {
+        for (int y = STARTING_INDEX; y >= LAST_INDEX; y--) // row (y)
+        {
+            for (int x = STARTING_INDEX; x >= LAST_INDEX; x--) // col (x)
+            {
+                // std::cout << "Child: " << x << ' ' << y << ' ' << z << '\n';
+                
+                glm::mat4 child = glm::mat4(1.0f);
+                // pretty sure arugment should be parent!
+                child = glm::translate(child, glm::vec3(x,y,z));
+                glm::mat4 model = glm::mat4(parent * child);
+                // model = parent * child;../
+
+                glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+                glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+            }
+        }
+    }
+    // std::cout << '\n';
+
 }
 
 void processInput(GLFWwindow *window)
