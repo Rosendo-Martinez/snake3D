@@ -8,6 +8,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "snakeLogic.h"
+
 // Screen dimensions
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -275,6 +277,9 @@ void processInput(GLFWwindow *window)
 int main()
 {
     std::cout << "Hello, 3D snake!\n";
+
+    // Temporary:
+    SnakePart test(0,0,0);
 
     // Initialize: glfw, window, and glad
     if (!init())
