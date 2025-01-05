@@ -205,6 +205,30 @@ void drawCube()
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
+void processInput(GLFWwindow *window)
+{   
+    // up
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        std::cout << "Up\n";
+    }
+    // down
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        std::cout << "Down\n";
+    }
+    // left
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+        std::cout << "Left\n";
+    }
+    // right
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+        std::cout << "Right\n";
+    }
+}
+
 int main()
 {
     std::cout << "Hello, 3D snake!\n";
@@ -222,6 +246,7 @@ int main()
     // render loop
     while (!glfwWindowShouldClose(window))
     {
+        processInput(window);
         drawCube();
 
         glfwSwapBuffers(window);
