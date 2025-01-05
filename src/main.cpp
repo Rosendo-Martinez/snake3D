@@ -229,6 +229,38 @@ void drawCube()
     }
 }
 
+void drawSubCube(int x, int y, int z)
+{
+    // BAD ASSUMPTION but: assumes was called AFTER call to drawCube
+    // Assuems x, y, z are correct!
+    
+    // turn off wire frame mode
+
+    // projection and view are already up
+
+    // need to create parent
+    // parentM
+    // childM = translate(x,y,z)
+    // set model = parentM * childM
+    
+    // I would like to scale it smaller, but do that after it works for reguler size subecube
+
+    // draw cube
+
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+
+    glm::mat4 parent = glm::mat4(1.0f);
+    parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
+    parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
+
+    glm::mat4 child = glm::mat4(1.0f);
+    child = glm::translate(child, glm::vec3(x,y,z));
+    glm::mat4 model = glm::mat4(parent * child);
+
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+}
+
 void processInput(GLFWwindow *window)
 {   
     // up
@@ -272,6 +304,10 @@ int main()
     {
         processInput(window);
         drawCube();
+        drawSubCube(1,1,1);
+        drawSubCube(1,1,0);
+        drawSubCube(1,0,0);
+        drawSubCube(1,1,2);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
