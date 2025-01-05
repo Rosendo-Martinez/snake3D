@@ -187,28 +187,12 @@ void setupToDrawCube()
 
 void drawCube()
 {
-    // render
-
+    // Clear screen
     glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     // wire frame mode (temp)
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-
-    // glm::mat4 projection;
-    // projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    // glm::mat4 view = glm::mat4(1.0f);
-    // // note that we're translating the scene in the reverse direction of where we want to move
-    // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    // glm::mat4 model = glm::mat4(1.0f);
-    // model = glm::rotate(model, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
-    // model = glm::rotate(model, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
-
-    // glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    // glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-    // glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-    // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -218,31 +202,28 @@ void drawCube()
     // note that we're translating the scene in the reverse direction of where we want to move
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-
     
-    const unsigned int SIZE_OF_CUBE = 3;
-    const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0);
-    const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1);
     glm::mat4 parent = glm::mat4(1.0f);
     parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
     parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
 
-    for (int z = STARTING_INDEX; z >= LAST_INDEX; z--) // wall (z)
+    const unsigned int SIZE_OF_CUBE = 3;
+    const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0);
+    const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1);
+
+    // Render each sub-cube
+    for (int z = STARTING_INDEX; z >= LAST_INDEX; z--)
     {
-        for (int y = STARTING_INDEX; y >= LAST_INDEX; y--) // row (y)
+        for (int y = STARTING_INDEX; y >= LAST_INDEX; y--)
         {
-            for (int x = STARTING_INDEX; x >= LAST_INDEX; x--) // col (x)
-            {
-                // std::cout << "Child: " << x << ' ' << y << ' ' << z << '\n';
-                
+            for (int x = STARTING_INDEX; x >= LAST_INDEX; x--)
+            {   
                 glm::mat4 child = glm::mat4(1.0f);
                 // pretty sure arugment should be parent!
                 child = glm::translate(child, glm::vec3(x,y,z));
                 glm::mat4 model = glm::mat4(parent * child);
-                // model = parent * child;../
 
                 glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-
                 glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
             }
         }
