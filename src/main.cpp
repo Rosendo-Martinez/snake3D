@@ -13,8 +13,40 @@ const unsigned int SCR_HEIGHT = 600;
 
 unsigned int shaderProgram;
 
+GLFWwindow* window;
 
-void setupToDrawSquare()
+bool init()
+{
+    // initialize glfw
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    // create window 
+    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Snake3D", NULL, NULL);
+    if (window == NULL)
+    {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return false;
+    }
+    glfwMakeContextCurrent(window);
+
+    // load opengl functions
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return false;
+    }
+
+    // initial viewport
+    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+
+    return true;
+}
+
+void setupToDrawCube()
 {
     // Square Data 
 
@@ -148,64 +180,49 @@ void setupToDrawSquare()
     glUseProgram(shaderProgram);
 }
 
+void drawCube()
+{
+    // render
+
+    glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // wire frame mode (temp)
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    glm::mat4 view = glm::mat4(1.0f);
+    // note that we're translating the scene in the reverse direction of where we want to move
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians(120.0f), glm::vec3(0.0, 1.0, 0.0));
+
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+}
+
 int main()
 {
     std::cout << "Hello, 3D snake!\n";
 
-    // initialize glfw
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    // create window 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Snake3D", NULL, NULL);
-    if (window == NULL)
+    // Initialize: glfw, window, and glad
+    if (!init())
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
         return -1;
     }
-    glfwMakeContextCurrent(window);
-
-    // load opengl functions
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
-
-    // initial viewport
-    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
     // Note: binds VAO, and uses shader program
     // No need to rebind VAO or shader program
-    setupToDrawSquare();
+    setupToDrawCube();
 
     // render loop
     while (!glfwWindowShouldClose(window))
     {
-        // render
-
-        glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // wire frame mode (temp)
-        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        // note that we're translating the scene in the reverse direction of where we want to move
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(120.0f), glm::vec3(0.0, 1.0, 0.0));
-
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        drawCube();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
