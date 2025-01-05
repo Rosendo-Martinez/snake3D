@@ -232,20 +232,6 @@ void drawCube()
 void drawSubCube(int x, int y, int z)
 {
     // BAD ASSUMPTION but: assumes was called AFTER call to drawCube
-    // Assuems x, y, z are correct!
-    
-    // turn off wire frame mode
-
-    // projection and view are already up
-
-    // need to create parent
-    // parentM
-    // childM = translate(x,y,z)
-    // set model = parentM * childM
-    
-    // I would like to scale it smaller, but do that after it works for reguler size subecube
-
-    // draw cube
 
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
