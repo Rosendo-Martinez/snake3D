@@ -1,11 +1,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 
 // Screen dimensions
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+unsigned int shaderProgram;
 
 
 void setupToDrawSquare()
@@ -14,17 +20,39 @@ void setupToDrawSquare()
 
     const float vertices[] = 
     {
-        // Position (already in NDC)
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left
+        // front vertices
+        -0.5f,  0.5f, 0.5f, // top left
+         0.5f,  0.5f, 0.5f, // top right
+         0.5f, -0.5f, 0.5f, // bottom right
+        -0.5f, -0.5f, 0.5f, // bottom left
+
+        // back vertices
+        -0.5f,  0.5f, -0.5f, // top left
+         0.5f,  0.5f, -0.5f, // top right
+         0.5f, -0.5f, -0.5f, // bottom right
+        -0.5f, -0.5f, -0.5f, // bottom left
     };
 
     unsigned int indices[] = 
     {
-        0, 2, 3, // upper left triangle
-        0, 2, 1 // lower right triangle
+        // front face
+        3, 1, 0,
+        3, 2, 1,
+        // back face
+        7, 4, 5,
+        7, 5, 6,
+        // top face
+        0, 5, 4,
+        0, 1, 5,
+        // bottom face
+        3, 7, 6,
+        3, 6, 2,
+        // left face
+        3, 0, 4,
+        3, 4, 7,
+        // right face
+        2, 5, 1,
+        2, 6, 5
     };
 
     // Create buffers, and attributes
@@ -54,9 +82,12 @@ void setupToDrawSquare()
 
     const char *vertexShaderSource = "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
+        "uniform mat4 model;\n"
+        "uniform mat4 view;\n"
+        "uniform mat4 projection;\n"
         "void main()\n"
         "{\n"
-        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+        "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
         "}\0";
     const char *fragmentShaderSource = "#version 330 core\n"
         "out vec4 FragColor;\n"
@@ -65,7 +96,7 @@ void setupToDrawSquare()
         "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
         "}\n\0";
     
-    unsigned int shaderProgram, vertexShader, fragmentShader;
+    unsigned int vertexShader, fragmentShader;
     int success;
     char infoLog[512];
 
@@ -159,7 +190,22 @@ int main()
         glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // wire frame mode (temp)
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+        glm::mat4 projection;
+        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        // note that we're translating the scene in the reverse direction of where we want to move
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(120.0f), glm::vec3(0.0, 1.0, 0.0));
+
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
