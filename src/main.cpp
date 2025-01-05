@@ -15,6 +15,10 @@ unsigned int shaderProgram;
 
 GLFWwindow* window;
 
+// Rotation angels for cube (degrees)
+float xAngel = 0; // rotation about x axis (up/down)
+float yAngel = 0; // rotation about y axis (left/right)
+
 bool init()
 {
     // initialize glfw
@@ -196,7 +200,8 @@ void drawCube()
     // note that we're translating the scene in the reverse direction of where we want to move
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(120.0f), glm::vec3(0.0, 1.0, 0.0));
+    model = glm::rotate(model, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
+    model = glm::rotate(model, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
@@ -210,22 +215,22 @@ void processInput(GLFWwindow *window)
     // up
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
     {
-        std::cout << "Up\n";
+        xAngel += 1;
     }
     // down
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
     {
-        std::cout << "Down\n";
+        xAngel -= 1;
     }
     // left
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
     {
-        std::cout << "Left\n";
+        yAngel -= 1;
     }
     // right
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
     {
-        std::cout << "Right\n";
+        yAngel += 1;
     }
 }
 
