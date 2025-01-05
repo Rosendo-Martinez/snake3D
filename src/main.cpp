@@ -210,14 +210,6 @@ void drawCube()
 
     // glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-    // parentM (can just be identy)
-
-    // for each wall
-        // for each col
-            // for each row
-                // matrix = parentM * childM
-                // draw cube with matrix as coordinte system local to child
-
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -232,6 +224,8 @@ void drawCube()
     const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0);
     const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1);
     glm::mat4 parent = glm::mat4(1.0f);
+    parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
+    parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
 
     for (int z = STARTING_INDEX; z >= LAST_INDEX; z--) // wall (z)
     {
