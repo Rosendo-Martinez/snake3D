@@ -20,6 +20,9 @@ GLFWwindow* window;
 
 SnakeLogic snakeLogic;
 
+const double MOVE_INTERVAL = 0.4f; // seconds
+double lastMoveTime = 0.f; // seconds
+
 // Rotation angels for cube (degrees)
 float xAngel = 0; // rotation about x axis (up/down)
 float yAngel = 0; // rotation about y axis (left/right)
@@ -279,35 +282,53 @@ void processInput(GLFWwindow *window)
 
     // Snake movement
 
+    // Check if snake can't move
+    if (glfwGetTime() - lastMoveTime < MOVE_INTERVAL)
+    {
+        return; // can't move, so skip movement input
+    }
+
     // up (w)
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
         snakeLogic.move(Direction::Up);
+        lastMoveTime = glfwGetTime();
+        return;
     }
     // down (s)
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
     {
         snakeLogic.move(Direction::Down);
+        lastMoveTime = glfwGetTime();
+        return;
     }
     // left (a)
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
     {
         snakeLogic.move(Direction::Left);
+        lastMoveTime = glfwGetTime();
+        return;
     }
     // right (d)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
         snakeLogic.move(Direction::Right);
+        lastMoveTime = glfwGetTime();
+        return;
     }
     // forward (q)
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
     {
         snakeLogic.move(Direction::Forward);
+        lastMoveTime = glfwGetTime();
+        return;
     }
     // backward (e)
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
     {
         snakeLogic.move(Direction::Backward);
+        lastMoveTime = glfwGetTime();
+        return;
     }
 }
 
