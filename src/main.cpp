@@ -325,9 +325,18 @@ int main()
     // No need to rebind VAO or shader program
     setupToDrawCube();
 
+    double time_of_last_log = 0;
+    double log_interval = 1.0f; // 1 second
+
     // render loop
     while (!glfwWindowShouldClose(window))
     {
+        if (glfwGetTime() - time_of_last_log >= log_interval)
+        {
+            std::cout << log_interval << " second passed!\n";
+            time_of_last_log = glfwGetTime();
+        }
+
         processInput(window);
         drawCube();
 
