@@ -18,6 +18,8 @@ unsigned int shaderProgram;
 
 GLFWwindow* window;
 
+SnakeLogic snakeLogic;
+
 // Rotation angels for cube (degrees)
 float xAngel = 0; // rotation about x axis (up/down)
 float yAngel = 0; // rotation about y axis (left/right)
@@ -280,32 +282,32 @@ void processInput(GLFWwindow *window)
     // up (w)
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
-        std::cout << "W\n";
+        snakeLogic.move(Direction::Up);
     }
     // down (s)
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
     {
-        std::cout << "S\n";
+        snakeLogic.move(Direction::Down);
     }
     // left (a)
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
     {
-        std::cout << "A\n";
+        snakeLogic.move(Direction::Left);
     }
     // right (d)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
-        std::cout << "D\n";
+        snakeLogic.move(Direction::Right);
     }
     // forward (q)
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
     {
-        std::cout << "Q\n";
+        snakeLogic.move(Direction::Forward);
     }
     // backward (e)
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
     {
-        std::cout << "E\n";
+        snakeLogic.move(Direction::Backward);
     }
 }
 
@@ -322,8 +324,6 @@ int main()
     // Note: binds VAO, and uses shader program
     // No need to rebind VAO or shader program
     setupToDrawCube();
-
-    SnakeLogic snakeLogic;
 
     // render loop
     while (!glfwWindowShouldClose(window))
