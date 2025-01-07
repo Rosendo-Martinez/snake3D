@@ -10,6 +10,11 @@ SnakePart::SnakePart(int x, int y, int z) : x(x), y(y), z(z)
 
 SnakeLogic::SnakeLogic()
 {
+    snake[0] = SnakePart(0,0,0); // head
+    snake[1] = SnakePart(0,0,-1);
+    snake[2] = SnakePart(0,0,-2);
+
+    snakeSize = 3;
 }
 
 void SnakeLogic::move(Direction dir)

@@ -313,9 +313,6 @@ int main()
 {
     std::cout << "Hello, 3D snake!\n";
 
-    // Temporary:
-    SnakePart test(0,0,0);
-
     // Initialize: glfw, window, and glad
     if (!init())
     {
@@ -326,15 +323,20 @@ int main()
     // No need to rebind VAO or shader program
     setupToDrawCube();
 
+    SnakeLogic snakeLogic;
+
     // render loop
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
         drawCube();
-        drawSubCube(1,1,1);
-        drawSubCube(1,1,0);
-        drawSubCube(1,0,0);
-        drawSubCube(1,1,2);
+
+        // Draw snake
+        for (int i = 0; i < snakeLogic.getSnakeSize(); i++)
+        {
+            SnakePart part = snakeLogic.getSnake()[i];
+            drawSubCube(part.x, part.y, part.z);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

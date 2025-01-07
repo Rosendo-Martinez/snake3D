@@ -14,7 +14,7 @@ enum class Direction
 class SnakeLogic
 {
     SnakePart snake[50];
-    int snakeSize = 3;
+    int snakeSize = 0;
 
 public:
     SnakeLogic();
