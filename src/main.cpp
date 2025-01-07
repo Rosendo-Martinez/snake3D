@@ -252,6 +252,8 @@ void drawSubCube(int x, int y, int z)
 
 void processInput(GLFWwindow *window)
 {   
+    // Cube movement
+
     // up
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
     {
@@ -271,6 +273,39 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
     {
         yAngel += 1;
+    }
+
+    // Snake movement
+
+    // up (w)
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        std::cout << "W\n";
+    }
+    // down (s)
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        std::cout << "S\n";
+    }
+    // left (a)
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        std::cout << "A\n";
+    }
+    // right (d)
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        std::cout << "D\n";
+    }
+    // forward (q)
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+    {
+        std::cout << "Q\n";
+    }
+    // backward (e)
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+    {
+        std::cout << "E\n";
     }
 }
 
