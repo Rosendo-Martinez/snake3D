@@ -48,7 +48,7 @@ void loadTextureAtlas()
     unsigned char *data = stbi_load("Snake3DTextureAtlas.png", &width, &height, &nrChannels, 0);
     if (data)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     }
     else
     {
@@ -167,18 +167,23 @@ void makeShaderProgram()
 
     const char *vertexShaderSource = "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
+        "layout (location = 1) in vec2 aTexCoord;\n"
+        "out vec2 TexCoord;\n"
         "uniform mat4 model;\n"
         "uniform mat4 view;\n"
         "uniform mat4 projection;\n"
         "void main()\n"
         "{\n"
         "   gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
+        "   TexCoord = aTexCoord;\n"
         "}\0";
     const char *fragmentShaderSource = "#version 330 core\n"
+        "in vec2 TexCoord;\n"
         "out vec4 FragColor;\n"
+        "uniform sampler2D ourTexture;"
         "void main()\n"
         "{\n"
-        "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+        "   FragColor = texture(ourTexture, TexCoord);\n"
         "}\n\0";
     
     unsigned int vertexShader, fragmentShader;
@@ -231,6 +236,7 @@ void makeShaderProgram()
 
     // Use shader
     glUseProgram(shaderProgram);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void makeCubeVAOAndVBO()
@@ -337,6 +343,52 @@ void drawCube()
 
                 glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
                 glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+            }
+        }
+    }
+}
+
+void drawDirtCube()
+{
+    // Clear screen
+    glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // wire frame mode (temp)
+    // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+    glm::mat4 view = glm::mat4(1.0f);
+    // note that we're translating the scene in the reverse direction of where we want to move
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    
+    glm::mat4 parent = glm::mat4(1.0f);
+    parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
+    parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
+
+    const unsigned int SIZE_OF_CUBE = 3;
+    const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0);
+    const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1);
+
+    glBindVertexArray(dirtBlockVAO);
+
+    // Render each sub-cube
+    for (int z = STARTING_INDEX; z >= LAST_INDEX; z--)
+    {
+        for (int y = STARTING_INDEX; y >= LAST_INDEX; y--)
+        {
+            for (int x = STARTING_INDEX; x >= LAST_INDEX; x--)
+            {   
+                glm::mat4 child = glm::mat4(1.0f);
+                child = glm::translate(child, glm::vec3(x,y,z));
+                glm::mat4 model = glm::mat4(parent * child);
+
+                glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+                glDrawArrays(GL_TRIANGLES, 0, 24);
             }
         }
     }
@@ -456,7 +508,8 @@ int main()
 
     // Note: binds VAO, and uses shader program
     // No need to rebind VAO or shader program
-    makeCubeVAOAndVBO();
+    // makeCubeVAOAndVBO();
+    makeDirtBlockVAOAndVBO();
     makeShaderProgram();
 
     // load texture atlas 
@@ -468,32 +521,34 @@ int main()
     // render loop
     while (!glfwWindowShouldClose(window))
     {
-        if (snakeLogic.isDead())
-        {
-            snakeLogic.reset();
-        }
+        // if (snakeLogic.isDead())
+        // {
+        //     snakeLogic.reset();
+        // }
 
-        if (glfwGetTime() - time_of_last_log >= log_interval)
-        {
-            std::cout << log_interval << " second passed!\n";
-            time_of_last_log = glfwGetTime();
-        }
+        // if (glfwGetTime() - time_of_last_log >= log_interval)
+        // {
+        //     std::cout << log_interval << " second passed!\n";
+        //     time_of_last_log = glfwGetTime();
+        // }
 
         processInput(window);
-        drawCube();
+        // drawCube();
 
-        // Draw snake
-        for (int i = 0; i < snakeLogic.getSnakeSize(); i++)
-        {
-            SnakePart part = snakeLogic.getSnake()[i];
-            drawSubCube(part.x, part.y, part.z);
-        }
+        // // Draw snake
+        // for (int i = 0; i < snakeLogic.getSnakeSize(); i++)
+        // {
+        //     SnakePart part = snakeLogic.getSnake()[i];
+        //     drawSubCube(part.x, part.y, part.z);
+        // }
 
-        for (int i = 0; i < snakeLogic.getApplesSize(); i++)
-        {
-            Apple apple = snakeLogic.getApples()[i];
-            drawSubCube(apple.x, apple.y, apple.z);
-        }
+        // for (int i = 0; i < snakeLogic.getApplesSize(); i++)
+        // {
+        //     Apple apple = snakeLogic.getApples()[i];
+        //     drawSubCube(apple.x, apple.y, apple.z);
+        // }
+
+        drawDirtCube();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
