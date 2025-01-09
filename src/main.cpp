@@ -58,70 +58,8 @@ bool init()
     return true;
 }
 
-void setupToDrawCube()
+void makeShaderProgram()
 {
-    // Square Data 
-
-    const float vertices[] = 
-    {
-        // front vertices
-        -0.5f,  0.5f, 0.5f, // top left
-         0.5f,  0.5f, 0.5f, // top right
-         0.5f, -0.5f, 0.5f, // bottom right
-        -0.5f, -0.5f, 0.5f, // bottom left
-
-        // back vertices
-        -0.5f,  0.5f, -0.5f, // top left
-         0.5f,  0.5f, -0.5f, // top right
-         0.5f, -0.5f, -0.5f, // bottom right
-        -0.5f, -0.5f, -0.5f, // bottom left
-    };
-
-    unsigned int indices[] = 
-    {
-        // front face
-        3, 1, 0,
-        3, 2, 1,
-        // back face
-        7, 4, 5,
-        7, 5, 6,
-        // top face
-        0, 5, 4,
-        0, 1, 5,
-        // bottom face
-        3, 7, 6,
-        3, 6, 2,
-        // left face
-        3, 0, 4,
-        3, 4, 7,
-        // right face
-        2, 5, 1,
-        2, 6, 5
-    };
-
-    // Create buffers, and attributes
-
-    unsigned int VAO, VBO, EBO;
-
-    // Generate ids
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    // Upload vertex data to opengl
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
-    glEnableVertexAttribArray(0);
-
-    // Upload indices data to opengl
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
     // Create shader program
 
     const char *vertexShaderSource = "#version 330 core\n"
@@ -190,6 +128,71 @@ void setupToDrawCube()
 
     // Use shader
     glUseProgram(shaderProgram);
+}
+
+void makeCubeVAOAndVBO()
+{
+    // Square Data 
+
+    const float vertices[] = 
+    {
+        // front vertices
+        -0.5f,  0.5f, 0.5f, // top left
+         0.5f,  0.5f, 0.5f, // top right
+         0.5f, -0.5f, 0.5f, // bottom right
+        -0.5f, -0.5f, 0.5f, // bottom left
+
+        // back vertices
+        -0.5f,  0.5f, -0.5f, // top left
+         0.5f,  0.5f, -0.5f, // top right
+         0.5f, -0.5f, -0.5f, // bottom right
+        -0.5f, -0.5f, -0.5f, // bottom left
+    };
+
+    unsigned int indices[] = 
+    {
+        // front face
+        3, 1, 0,
+        3, 2, 1,
+        // back face
+        7, 4, 5,
+        7, 5, 6,
+        // top face
+        0, 5, 4,
+        0, 1, 5,
+        // bottom face
+        3, 7, 6,
+        3, 6, 2,
+        // left face
+        3, 0, 4,
+        3, 4, 7,
+        // right face
+        2, 5, 1,
+        2, 6, 5
+    };
+
+    // Create buffers, and attributes
+
+    unsigned int VAO, VBO, EBO;
+
+    // Generate ids
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+
+    // Upload vertex data to opengl
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(0);
+
+    // Upload indices data to opengl
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
 void drawCube()
@@ -350,7 +353,8 @@ int main()
 
     // Note: binds VAO, and uses shader program
     // No need to rebind VAO or shader program
-    setupToDrawCube();
+    makeCubeVAOAndVBO();
+    makeShaderProgram();
 
     double time_of_last_log = 0;
     double log_interval = 1.0f; // 1 second
