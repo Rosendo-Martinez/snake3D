@@ -19,6 +19,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 unsigned int shaderProgram;
 unsigned int textureAtlas;
+unsigned int dirtBlockVAO;
 
 GLFWwindow* window;
 
@@ -85,6 +86,79 @@ bool init()
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
     return true;
+}
+
+void makeDirtBlockVAOAndVBO()
+{
+    float vertices[] = {
+        // Back face
+        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+        0.5f, -0.5f, -0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+        0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+        0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+        -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+
+        // Front face
+        -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+        0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+        0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+        0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+        -0.5f,  0.5f,  0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+        -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+
+        // Left face
+        -0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+        -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+        -0.5f, -0.5f,  0.5f,  3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+        -0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+
+        // Right face
+        0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+        0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+        0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+        0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+        0.5f, -0.5f,  0.5f,  3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+        0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+
+        // Bottom face
+        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+        0.5f, -0.5f, -0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+        0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+        0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+        -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+
+        // Top face
+        -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+        0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+        0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+        0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right (duplicate)
+        -0.5f,  0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+        -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f   // top-left (duplicate)
+    };
+
+    unsigned int VBO;
+
+    // Generate ids
+    glGenVertexArrays(1, &dirtBlockVAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(dirtBlockVAO);
+
+    // Upload vertex data to opengl
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(0);
+
+    // Texture position attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 }
 
 void makeShaderProgram()
