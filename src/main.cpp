@@ -379,6 +379,12 @@ int main()
             drawSubCube(part.x, part.y, part.z);
         }
 
+        for (int i = 0; i < snakeLogic.getApplesSize(); i++)
+        {
+            Apple apple = snakeLogic.getApples()[i];
+            drawSubCube(apple.x, apple.y, apple.z);
+        }
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
