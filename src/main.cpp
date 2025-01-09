@@ -293,6 +293,7 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Up);
         lastMoveTime = glfwGetTime();
+        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // down (s)
@@ -300,6 +301,7 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Down);
         lastMoveTime = glfwGetTime();
+        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // left (a)
@@ -307,6 +309,7 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Left);
         lastMoveTime = glfwGetTime();
+        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // right (d)
@@ -314,6 +317,7 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Right);
         lastMoveTime = glfwGetTime();
+        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // forward (q)
@@ -321,6 +325,7 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Forward);
         lastMoveTime = glfwGetTime();
+        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // backward (e)
@@ -328,6 +333,7 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Backward);
         lastMoveTime = glfwGetTime();
+        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
 }
@@ -352,6 +358,11 @@ int main()
     // render loop
     while (!glfwWindowShouldClose(window))
     {
+        if (snakeLogic.isDead())
+        {
+            snakeLogic.reset();
+        }
+
         if (glfwGetTime() - time_of_last_log >= log_interval)
         {
             std::cout << log_interval << " second passed!\n";
