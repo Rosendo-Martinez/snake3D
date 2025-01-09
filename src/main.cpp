@@ -8,6 +8,9 @@
 #include <cmath>
 #include <iostream>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "snakeLogic.h"
 
 // Screen dimensions
@@ -15,6 +18,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 unsigned int shaderProgram;
+unsigned int textureAtlas;
 
 GLFWwindow* window;
 
@@ -26,6 +30,31 @@ double lastMoveTime = 0.f; // seconds
 // Rotation angels for cube (degrees)
 float xAngel = 0; // rotation about x axis (up/down)
 float yAngel = 0; // rotation about y axis (left/right)
+
+void loadTextureAtlas()
+{
+    glGenTextures(1, &textureAtlas);
+    glBindTexture(GL_TEXTURE_2D, textureAtlas);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    stbi_set_flip_vertically_on_load(true); 
+
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("Snake3DTextureAtlas.png", &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    }
+    else
+    {
+        std::cout << "Failed to load texture atlas!\n";
+    }
+    stbi_image_free(data);
+}
 
 bool init()
 {
@@ -355,6 +384,9 @@ int main()
     // No need to rebind VAO or shader program
     makeCubeVAOAndVBO();
     makeShaderProgram();
+
+    // load texture atlas 
+    loadTextureAtlas();
 
     double time_of_last_log = 0;
     double log_interval = 1.0f; // 1 second
