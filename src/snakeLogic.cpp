@@ -24,6 +24,8 @@ SnakeLogic::SnakeLogic()
 
 void SnakeLogic::move(Direction dir)
 {
+    eatApple();
+    
     // Move snake forward (except head)
     // Done by shifting back snake parts in array
     for (int i = snakeSize - 1; i > 0; i--)
@@ -189,4 +191,35 @@ const Apple * SnakeLogic::getApples()
 const int SnakeLogic::getApplesSize()
 {
     return applesSize;
+}
+
+void SnakeLogic::eatApple()
+{
+    // should be called right before snake moves
+    // will check if head is currently at apple
+    // if snake will grow and eat apple
+
+    // max snake size
+    if (snakeSize == MAX_SNAKE_SIZE)
+    {
+        return;
+    }
+
+    // Check if snake head is at same posistion as apple.
+    for (int i = 0; i < applesSize; i++)
+    {
+        if (snake[0].x == apples[i].x && snake[0].y == apples[i].y && snake[0].z == apples[i].z)
+        {
+            // Delete apple that was eaten
+            for (int j = i; j < applesSize - 1; j++) // shift apples forward
+            {
+                apples[j] = apples[j + 1];
+            }
+
+            // Eat apple, and snake grows
+            applesSize--;
+            snakeSize++;
+            return;
+        }
+    }
 }

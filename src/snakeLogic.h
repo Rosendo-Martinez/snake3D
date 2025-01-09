@@ -1,4 +1,5 @@
 #define MAX_APPLES 3
+#define MAX_SNAKE_SIZE 10
 
 struct SnakePart
 {
@@ -23,7 +24,7 @@ enum class Direction
 
 class SnakeLogic
 {
-    SnakePart snake[50];
+    SnakePart snake[MAX_SNAKE_SIZE];
     int snakeSize = 0;
     int cubeSize = 3;
     Apple apples[MAX_APPLES];
@@ -41,4 +42,5 @@ public:
     void generateApple();
     const Apple * getApples();
     const int getApplesSize();
+    void eatApple();
 };
