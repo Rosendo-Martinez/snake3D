@@ -697,6 +697,10 @@ int main()
     double time_of_last_log = 0;
     double log_interval = 1.0f; // 1 second
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);  // Cull back faces (we want to see only the front)
+    glFrontFace(GL_CCW);   // Define front-facing triangles to be counter-clockwise
+
     // render loop
     while (!glfwWindowShouldClose(window))
     {
