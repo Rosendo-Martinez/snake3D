@@ -388,7 +388,7 @@ void drawDirtCube()
                 glm::mat4 model = glm::mat4(parent * child);
 
                 glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-                glDrawArrays(GL_TRIANGLES, 0, 24);
+                glDrawArrays(GL_TRIANGLES, 0, 36);
             }
         }
     }
