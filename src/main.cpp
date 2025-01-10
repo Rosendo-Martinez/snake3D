@@ -20,6 +20,7 @@ const unsigned int SCR_HEIGHT = 600;
 unsigned int shaderProgram;
 unsigned int textureAtlas;
 unsigned int dirtBlockVAO;
+unsigned int wormBodyVAO;
 
 GLFWwindow* window;
 
@@ -90,6 +91,152 @@ bool init()
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
     return true;
+}
+
+void makeWormBodyVAO()
+{
+    const float position[] = 
+    {
+        // Back face
+        // E, F, G
+        -0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        // H, G, F
+        0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+
+        // Top face
+        // E, A, F
+        -0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        // B, F, A
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f,  0.5f,
+
+        // Left face
+        // A, E, C
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        // G, C, E
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+
+        // Right face
+        // B, D, F
+        0.5f,  0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        // H, F, D
+        0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f, -0.5f,  0.5f,
+
+        // Bottom face
+        // G, H, C
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        // D, C, H
+        0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f, -0.5f
+    };
+
+    const float texCoords[] = 
+    {
+        // Back face
+        // E, F, G
+        1.0f/4.0f, 5.0f/6.0f,
+        0.0f/4.0f, 5.0f/6.0f,
+        1.0f/4.0f, 4.0f/6.0f,
+        // H, G, F
+        0.0f/4.0f, 4.0f/6.0f,
+        1.0f/4.0f, 4.0f/6.0f,
+        0.0f/4.0f, 5.0f/6.0f,
+
+        // Top face
+        // E, A, F
+        4.0f/4.0f, 5.0f/6.0f,
+        4.0f/4.0f, 6.0f/6.0f,
+        3.0f/4.0f, 5.0f/6.0f,
+        // B, F, A
+        3.0f/4.0f, 6.0f/6.0f,
+        3.0f/4.0f, 5.0f/6.0f,
+        4.0f/4.0f, 6.0f/6.0f,
+
+        // Left face
+        // A, E, C
+        3.0f/4.0f, 6.0f/6.0f,
+        3.0f/4.0f, 5.0f/6.0f,
+        4.0f/4.0f, 6.0f/6.0f,
+        // G, C, E
+        4.0f/4.0f, 5.0f/6.0f,
+        4.0f/4.0f, 6.0f/6.0f,
+        3.0f/4.0f, 5.0f/6.0f,
+
+        // Right face
+        // B, D, F
+        4.0f/4.0f, 6.0f/6.0f,
+        3.0f/4.0f, 6.0f/6.0f,
+        4.0f/4.0f, 5.0f/6.0f,
+        // H, F, D
+        3.0f/4.0f, 5.0f/6.0f,
+        4.0f/4.0f, 5.0f/6.0f,
+        3.0f/4.0f, 6.0f/6.0f,
+
+        // Bottom face
+        // G, H, C
+        3.0f/4.0f, 5.0f/6.0f,
+        4.0f/4.0f, 5.0f/6.0f,
+        3.0f/4.0f, 6.0f/6.0f,
+        // D, C, H
+        4.0f/4.0f, 6.0f/6.0f,
+        3.0f/4.0f, 6.0f/6.0f,
+        4.0f/4.0f, 5.0f/6.0f,
+    };
+
+    unsigned int VBO_position, VBO_texCoords;
+
+    glGenVertexArrays(1, &wormBodyVAO);
+    glBindVertexArray(wormBodyVAO);
+
+    glGenBuffers(1, &VBO_position);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(position), position, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+    glEnableVertexAttribArray(0);
+
+    glGenBuffers(1, &VBO_texCoords);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_texCoords);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 & sizeof(float), 0);
+    glEnableVertexAttribArray(1);
+
+    // // Generate ids
+    // glGenVertexArrays(1, &wormBodyVAO);
+    // glGenBuffers(1, &VBO);
+
+    // glBindVertexArray(wormBodyVAO);
+
+    // // Upload vertex data to opengl
+    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // // Position attribute
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    // glEnableVertexAttribArray(0);
+
+    // // Texture position attribute
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
 }
 
 void makeDirtBlockVAOAndVBO()
@@ -355,8 +502,6 @@ void drawCube()
 void drawDirtCube()
 {
     // Clear screen
-    glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // wire frame mode (temp)
     // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -410,6 +555,7 @@ void drawDirtCube()
 void drawSubCube(int x, int y, int z)
 {
     // BAD ASSUMPTION but: assumes was called AFTER call to drawCube
+    // Assumes matrices have been set
 
     // glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
@@ -423,7 +569,7 @@ void drawSubCube(int x, int y, int z)
     glm::mat4 model = glm::mat4(parent * child);
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 30); 
 }
 
 void processInput(GLFWwindow *window)
@@ -542,6 +688,7 @@ int main()
     // No need to rebind VAO or shader program
     // makeCubeVAOAndVBO();
     makeDirtBlockVAOAndVBO();
+    makeWormBodyVAO();
     makeShaderProgram();
 
     // load texture atlas 
@@ -567,12 +714,19 @@ int main()
         processInput(window);
         // drawCube();
 
-        // // Draw snake
-        // for (int i = 0; i < snakeLogic.getSnakeSize(); i++)
-        // {
-        //     SnakePart part = snakeLogic.getSnake()[i];
-        //     drawSubCube(part.x, part.y, part.z);
-        // }
+        // clear screen
+        glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        drawDirtCube();
+
+        // Draw snake
+        glBindVertexArray(wormBodyVAO);
+        for (int i = 0; i < snakeLogic.getSnakeSize(); i++)
+        {
+            SnakePart part = snakeLogic.getSnake()[i];
+            drawSubCube(part.x, part.y, part.z);
+        }
 
         // for (int i = 0; i < snakeLogic.getApplesSize(); i++)
         // {
@@ -580,7 +734,6 @@ int main()
         //     drawSubCube(apple.x, apple.y, apple.z);
         // }
 
-        drawDirtCube();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
