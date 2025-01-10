@@ -565,7 +565,7 @@ void drawSubCube(int x, int y, int z)
 
     glm::mat4 child = glm::mat4(1.0f);
     child = glm::translate(child, glm::vec3(x,y,z));
-    child = glm::scale(child, glm::vec3(.8f, .8f, .8f));
+    // child = glm::scale(child, glm::vec3(.8f, .8f, .8f));
     glm::mat4 model = glm::mat4(parent * child);
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
