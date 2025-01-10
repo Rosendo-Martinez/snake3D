@@ -28,6 +28,10 @@ SnakeLogic snakeLogic;
 const double MOVE_INTERVAL = 0.4f; // seconds
 double lastMoveTime = 0.f; // seconds
 
+const double DEBUG_TOGGLE_INTERVAL = 0.4f; // seconds
+double lastDebugToggleTime = 0.f; // seconds
+bool isWireFrameModeOn = false;
+
 // Rotation angels for cube (degrees)
 float xAngel = 0; // rotation about x axis (up/down)
 float yAngel = 0; // rotation about y axis (left/right)
@@ -311,7 +315,7 @@ void drawCube()
     glClear(GL_COLOR_BUFFER_BIT);
 
     // wire frame mode (temp)
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -398,7 +402,7 @@ void drawSubCube(int x, int y, int z)
 {
     // BAD ASSUMPTION but: assumes was called AFTER call to drawCube
 
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    // glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
     glm::mat4 parent = glm::mat4(1.0f);
     parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
@@ -415,6 +419,25 @@ void drawSubCube(int x, int y, int z)
 
 void processInput(GLFWwindow *window)
 {   
+    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+    {
+        if (glfwGetTime() - lastDebugToggleTime >= DEBUG_TOGGLE_INTERVAL)
+        {
+            if (isWireFrameModeOn) // fill
+            {
+                glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+            }
+            else // wireframe
+            {
+                glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+            }
+
+            // toggle
+            isWireFrameModeOn = !isWireFrameModeOn;
+            lastDebugToggleTime = glfwGetTime();
+        }
+    }
+
     // Cube movement
 
     // up
