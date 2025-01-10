@@ -1,9 +1,15 @@
 #define MAX_APPLES 3
 #define MAX_SNAKE_SIZE 10
 
+enum class Direction
+{
+    Up, Down, Right, Left, Forward, Backward
+};
+
 struct SnakePart
 {
     int x, y, z;
+    Direction dir = Direction::Forward;
 
     SnakePart();
     SnakePart(int x, int y, int z);
@@ -15,11 +21,6 @@ struct Apple
 
     Apple();
     Apple(int x, int y, int z);
-};
-
-enum class Direction
-{
-    Up, Down, Right, Left, Forward, Backward
 };
 
 class SnakeLogic

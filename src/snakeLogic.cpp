@@ -1,6 +1,7 @@
 #include "snakeLogic.h"
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 // #include <time.h>  
 
 SnakePart::SnakePart() : SnakePart(0,0,0)
@@ -58,6 +59,43 @@ void SnakeLogic::move(Direction dir)
     {
         snake[0].z--;
     }
+
+    // Update snake part directions
+
+    snake[0].dir = dir;
+
+    for (int i = 1; i < snakeSize; i++)
+    {
+        SnakePart& cur = snake[i];
+        const SnakePart prev = snake[i-1];
+
+        if (cur.y < prev.y)
+        {
+            cur.dir = Direction::Up;
+        }
+        else if (cur.y > prev.y)
+        {
+            cur.dir = Direction::Down;
+        }
+        else if (cur.x < prev.x)
+        {
+            cur.dir = Direction::Right;
+        }
+        else if (cur.x > prev.x)
+        {
+            cur.dir = Direction::Left;
+        }
+        else if (cur.z < prev.z)
+        {
+            cur.dir = Direction::Forward;
+        }
+        else // cur.z > prev.z
+        {
+            cur.dir = Direction::Backward;
+        }
+    }
+
+    std::cout << "Head Dir: " << ((int) snake[0].dir) << '\n';
 
     // handle apple generation logic
     generateApple();
