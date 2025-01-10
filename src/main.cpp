@@ -241,75 +241,221 @@ void makeWormBodyVAO()
 
 void makeDirtBlockVAOAndVBO()
 {
-    float vertices[] = {
-        // Back face
-        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-        0.5f, -0.5f, -0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-        0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-        0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-        -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
-
+    const float position[] = 
+    {
         // Front face
-        -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-        0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-        0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-        0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-        -0.5f,  0.5f,  0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-        -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+        // A, C, B
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        // D, B, C
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
 
-        // Left face
-        -0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-        -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
-        -0.5f, -0.5f,  0.5f,  3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-        -0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-
-        // Right face
-        0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-        0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-        0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-        0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
-        0.5f, -0.5f,  0.5f,  3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-        0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-
-        // Bottom face
-        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-        0.5f, -0.5f, -0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-        0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-        0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-        -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-        -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+        // Back face
+        // E, F, G
+        -0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        // H, G, F
+        0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
 
         // Top face
-        -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-        0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-        0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-        0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right (duplicate)
-        -0.5f,  0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-        -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f   // top-left (duplicate)
+        // E, A, F
+        -0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        // B, F, A
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f,  0.5f,
+
+        // Left face
+        // A, E, C
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        // G, C, E
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+
+        // Right face
+        // B, D, F
+        0.5f,  0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        // H, F, D
+        0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f, -0.5f,  0.5f,
+
+        // Bottom face
+        // G, H, C
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        // D, C, H
+        0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f, -0.5f
     };
 
-    unsigned int VBO;
+    const float texCoords[] = 
+    {
+        // Front face
+        // A, C, B
+        2.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 4.0f/6.0f,
+        // D, B, C
+        3.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 3.0f/6.0f,
 
-    // Generate ids
+        // Back face
+        // E, F, G
+        3.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 4.0f/6.0f,
+        3.0f/4.0f, 3.0f/6.0f,
+        // H, G, F
+        2.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 3.0f/6.0f,
+        2.0f/4.0f, 4.0f/6.0f,
+
+        // Top face
+        // E, A, F
+        2.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 4.0f/6.0f,
+        // B, F, A
+        3.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 3.0f/6.0f,
+
+        // Left face
+        // A, E, C
+        3.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 4.0f/6.0f,
+        3.0f/4.0f, 3.0f/6.0f,
+        // G, C, E
+        2.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 3.0f/6.0f,
+        2.0f/4.0f, 4.0f/6.0f,
+
+        // Right face
+        // B, D, F
+        2.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 4.0f/6.0f,
+        // H, F, D
+        3.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 3.0f/6.0f,
+
+        // Bottom face
+        // G, H, C
+        2.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 3.0f/6.0f,
+        2.0f/4.0f, 4.0f/6.0f,
+        // D, C, H
+        3.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 4.0f/6.0f,
+        3.0f/4.0f, 3.0f/6.0f,
+    };
+
+    unsigned int VBO_position, VBO_texCoords;
+
     glGenVertexArrays(1, &dirtBlockVAO);
-    glGenBuffers(1, &VBO);
-
     glBindVertexArray(dirtBlockVAO);
 
-    // Upload vertex data to opengl
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glGenBuffers(1, &VBO_position);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(position), position, GL_STATIC_DRAW);
 
-    // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
     glEnableVertexAttribArray(0);
 
-    // Texture position attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
+    glGenBuffers(1, &VBO_texCoords);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_texCoords);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 & sizeof(float), 0);
     glEnableVertexAttribArray(1);
+
+
+    // float vertices[] = {
+    //     // Back face
+    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+    //     0.5f, -0.5f, -0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+    //     0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+    //     0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+    //     -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+
+    //     // Front face
+    //     -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+    //     0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+    //     0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+    //     0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+    //     -0.5f,  0.5f,  0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+    //     -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+
+    //     // Left face
+    //     -0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+    //     -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+    //     -0.5f, -0.5f,  0.5f,  3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+    //     -0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+
+    //     // Right face
+    //     0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+    //     0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+    //     0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+    //     0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+    //     0.5f, -0.5f,  0.5f,  3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+    //     0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+
+    //     // Bottom face
+    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+    //     0.5f, -0.5f, -0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+    //     0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+    //     0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
+    //     -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
+
+    //     // Top face
+    //     -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
+    //     0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
+    //     0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
+    //     0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right (duplicate)
+    //     -0.5f,  0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
+    //     -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f   // top-left (duplicate)
+    // };
+
+    // unsigned int VBO;
+
+    // // Generate ids
+    // glGenVertexArrays(1, &dirtBlockVAO);
+    // glGenBuffers(1, &VBO);
+
+    // glBindVertexArray(dirtBlockVAO);
+
+    // // Upload vertex data to opengl
+    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // // Position attribute
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    // glEnableVertexAttribArray(0);
+
+    // // Texture position attribute
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
 }
 
 void makeShaderProgram()
