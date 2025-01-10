@@ -375,24 +375,33 @@ void drawDirtCube()
     parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
 
     const unsigned int SIZE_OF_CUBE = 3;
-    const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0);
-    const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1);
+    const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0); //positve
+    const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1); // negative
 
     glBindVertexArray(dirtBlockVAO);
 
-    // Render each sub-cube
-    for (int z = STARTING_INDEX; z >= LAST_INDEX; z--)
+    for (int y  = STARTING_INDEX; y >= LAST_INDEX - 15; y--)
     {
-        for (int y = STARTING_INDEX; y >= LAST_INDEX; y--)
+        for (int x = STARTING_INDEX + 15; x >= LAST_INDEX - 15; x--)
         {
-            for (int x = STARTING_INDEX; x >= LAST_INDEX; x--)
-            {   
+            for (int z = STARTING_INDEX; z >= LAST_INDEX - 15; z--)
+            {
+                // skip zone where worm moves
+                if (
+                    y <= STARTING_INDEX && y >= LAST_INDEX &&
+                    x <= STARTING_INDEX && x >= LAST_INDEX &&
+                    z <= STARTING_INDEX && z >= LAST_INDEX
+                )
+                {
+                    continue;
+                }
+
                 glm::mat4 child = glm::mat4(1.0f);
                 child = glm::translate(child, glm::vec3(x,y,z));
                 glm::mat4 model = glm::mat4(parent * child);
 
                 glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-                glDrawArrays(GL_TRIANGLES, 0, 36);
+                glDrawArrays(GL_TRIANGLES, 0, 36);   
             }
         }
     }
