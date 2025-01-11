@@ -26,6 +26,21 @@ SnakeLogic::SnakeLogic()
 void SnakeLogic::move(Direction dir)
 {
     eatApple();
+
+    // Ignore direction that moves snake backwards
+    if 
+    (   
+        (snake[0].dir == Direction::Right && dir == Direction::Left)       ||
+        (snake[0].dir == Direction::Left && dir == Direction::Right)       ||
+        (snake[0].dir == Direction::Up && dir == Direction::Down)          ||
+        (snake[0].dir == Direction::Down && dir == Direction::Up)          ||
+        (snake[0].dir == Direction::Forward && dir == Direction::Backward) ||
+        (snake[0].dir == Direction::Backward && dir == Direction::Forward)
+    )
+    {
+        dir = snake[0].dir;
+    }
+
     
     // Move snake forward (except head)
     // Done by shifting back snake parts in array
