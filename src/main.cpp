@@ -917,10 +917,13 @@ void makeBackGroundShaderProgram()
         "}\0";
     const char *fragmentShaderSource = "#version 330 core\n"
         "out vec4 FragColor;\n"
-        "in float y;\n"
+        "in float y;"
         "void main()\n"
         "{\n"
-        "   FragColor = vec4(0.0,0.0,1.0,1.0) * ((y + 1.0)/2.0) + vec4(1.0,1.0,1.0,1.0) * (1.0 - (y + 1.0)/2.0);\n" // LERP GOES HERE
+        "   vec3 blue = vec3(0.0,0.0,1.0);\n"
+        "   vec3 white = vec3(1.0,1.0,1.0);\n"
+        "   vec3 lerp = blue * ((y + 1.0)/4.0) + white * (1 - (y + 1.0)/4.0);\n"
+        "   FragColor = vec4(lerp, 1.0);\n" // LERP GOES HERE
         "}\n\0";
     
     unsigned int vertexShader, fragmentShader;
@@ -979,8 +982,8 @@ void makeBGVAO()
     const float vertices[] = 
     {
         -1.0f,  1.0f, 0.0f, // top left
-         1.0f,  1.0f, 0.0f, // top right
         -1.0f, -1.0f, 0.0f, // bottom left
+         1.0f,  1.0f, 0.0f, // top right
 
          1.0f, -1.0f, 0.0f, // bottom right
          1.0f,  1.0f, 0.0f, // top right
@@ -1098,8 +1101,8 @@ void drawApple(int x, int y, int z, const glm::mat4& parent)
 void render()
 {
     // clear screen
-    glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -1280,13 +1283,19 @@ int main()
             }
         }
 
-        // processInput(window);
+        processInput(window);
         
-        // render();
+
+        glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(shaderProgramBG);
         glBindVertexArray(bgVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glUseProgram(shaderProgram);
+        render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
