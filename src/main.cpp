@@ -967,10 +967,8 @@ void makeCubeVAOAndVBO()
 void drawDirtCube(const glm::mat4& parent)
 {   
     const unsigned int SIZE_OF_CUBE = 5;
-    const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0); //positve
+    const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0); // positive
     const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1); // negative
-
-    glBindVertexArray(dirtBlockVAO);
 
     for (int y  = STARTING_INDEX; y >= LAST_INDEX - 15; y--)
     {
@@ -1002,7 +1000,7 @@ void drawDirtCube(const glm::mat4& parent)
                 glm::mat4 model = glm::mat4(parent * child);
 
                 glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-                glDrawArrays(GL_TRIANGLES, 0, 36);   
+                glDrawArrays(GL_TRIANGLES, 0, 36);
             }
         }
     }
