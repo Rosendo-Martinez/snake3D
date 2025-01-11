@@ -964,12 +964,8 @@ void makeCubeVAOAndVBO()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
-void drawDirtCube()
+void drawDirtCube(const glm::mat4& parent)
 {   
-    glm::mat4 parent = glm::mat4(1.0f);
-    parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
-    parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
-
     const unsigned int SIZE_OF_CUBE = 5;
     const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0); //positve
     const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1); // negative
@@ -1012,12 +1008,8 @@ void drawDirtCube()
     }
 }
 
-void setSnakePartModel(int x, int y, int z, Direction dir)
+void setSnakePartModel(int x, int y, int z, Direction dir, const glm::mat4& parent)
 {
-    glm::mat4 parent = glm::mat4(1.0f);
-    parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
-    parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
-
     glm::mat4 child = glm::mat4(1.0f);
     child = glm::translate(child, glm::vec3(x,y,z));
 
@@ -1049,13 +1041,9 @@ void setSnakePartModel(int x, int y, int z, Direction dir)
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 }
 
-void drawApple(int x, int y, int z)
+void drawApple(int x, int y, int z, const glm::mat4& parent)
 {
     glBindVertexArray(appleVAO);
-
-    glm::mat4 parent = glm::mat4(1.0f);
-    parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
-    parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
 
     glm::mat4 child = glm::mat4(1.0f);
     child = glm::translate(child, glm::vec3(x,y,z));
@@ -1082,13 +1070,17 @@ void render()
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-    drawDirtCube();
+    glm::mat4 parent = glm::mat4(1.0f);
+    parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
+    parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
+
+    drawDirtCube(parent);
 
     // Draw snake
 
     // snake head
     const SnakePart head = snakeLogic.getSnake()[0];
-    setSnakePartModel(head.x, head.y, head.z, head.dir);
+    setSnakePartModel(head.x, head.y, head.z, head.dir, parent);
     glBindVertexArray(wormHeadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -1096,7 +1088,7 @@ void render()
     for (int i = 1; i < snakeLogic.getSnakeSize(); i++)
     {
         SnakePart part = snakeLogic.getSnake()[i];
-        setSnakePartModel(part.x, part.y, part.z, part.dir);
+        setSnakePartModel(part.x, part.y, part.z, part.dir, parent);
         glBindVertexArray(wormBodyVAO);
         glDrawArrays(GL_TRIANGLES, 0, 30); 
     }
@@ -1105,7 +1097,7 @@ void render()
     for (int i = 0; i < snakeLogic.getApplesSize(); i++)
     {
         Apple apple = snakeLogic.getApples()[i];
-        drawApple(apple.x, apple.y, apple.z);
+        drawApple(apple.x, apple.y, apple.z, parent);
     }
 }
 
