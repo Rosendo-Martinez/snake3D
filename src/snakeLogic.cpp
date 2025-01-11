@@ -2,7 +2,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
-// #include <time.h>  
+#include <time.h>  
 
 SnakePart::SnakePart() : SnakePart(0,0,0)
 {
@@ -10,8 +10,8 @@ SnakePart::SnakePart() : SnakePart(0,0,0)
 
 SnakePart::SnakePart(int x, int y, int z) : x(x), y(y), z(z)
 {
-//   /* initialize random seed: */
-//   srand (time(NULL));
+  /* initialize random seed: */
+  srand (time(NULL));
 }
 
 SnakeLogic::SnakeLogic()
@@ -142,7 +142,9 @@ void SnakeLogic::reset()
     snake[1] = SnakePart(0,0,-1);
     snake[2] = SnakePart(0,0,-2);
 
-    snakeSize = 3;   
+    snakeSize = 3;
+    applesSize = 0;
+    moveCountSinceLastAppleGen = 0;
 }
 
 /**
