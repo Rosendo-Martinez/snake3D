@@ -110,8 +110,6 @@ void SnakeLogic::move(Direction dir)
         }
     }
 
-    std::cout << "Head Dir: " << ((int) snake[0].dir) << '\n';
-
     // handle apple generation logic
     generateApple();
 }

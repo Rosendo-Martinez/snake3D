@@ -523,24 +523,6 @@ void makeWormBodyVAO()
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 & sizeof(float), 0);
     glEnableVertexAttribArray(1);
-
-    // // Generate ids
-    // glGenVertexArrays(1, &wormBodyVAO);
-    // glGenBuffers(1, &VBO);
-
-    // glBindVertexArray(wormBodyVAO);
-
-    // // Upload vertex data to opengl
-    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // // Position attribute
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
-    // glEnableVertexAttribArray(0);
-
-    // // Texture position attribute
-    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
 }
 
 void makeWormHeadVAO()
@@ -837,77 +819,6 @@ void makeDirtBlockVAOAndVBO()
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 & sizeof(float), 0);
     glEnableVertexAttribArray(1);
-
-
-    // float vertices[] = {
-    //     // Back face
-    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-    //     0.5f, -0.5f, -0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-    //     0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-    //     0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-    //     -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
-
-    //     // Front face
-    //     -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-    //     0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-    //     0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-    //     0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-    //     -0.5f,  0.5f,  0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-    //     -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
-
-    //     // Left face
-    //     -0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-    //     -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
-    //     -0.5f, -0.5f,  0.5f,  3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-    //     -0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-
-    //     // Right face
-    //     0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-    //     0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-    //     0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-    //     0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
-    //     0.5f, -0.5f,  0.5f,  3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-    //     0.5f,  0.5f,  0.5f,  3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-
-    //     // Bottom face
-    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-    //     0.5f, -0.5f, -0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-    //     0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-    //     0.5f, -0.5f,  0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right (duplicate)
-    //     -0.5f, -0.5f,  0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-    //     -0.5f, -0.5f, -0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left (duplicate)
-
-    //     // Top face
-    //     -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f,  // top-left
-    //     0.5f,  0.5f, -0.5f,   3.0f / 4.0f, 4.0f / 6.0f,  // top-right
-    //     0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right
-    //     0.5f,  0.5f,  0.5f,   3.0f / 4.0f, 3.0f / 6.0f,  // bottom-right (duplicate)
-    //     -0.5f,  0.5f,  0.5f,  2.0f / 4.0f, 3.0f / 6.0f,  // bottom-left
-    //     -0.5f,  0.5f, -0.5f,  2.0f / 4.0f, 4.0f / 6.0f   // top-left (duplicate)
-    // };
-
-    // unsigned int VBO;
-
-    // // Generate ids
-    // glGenVertexArrays(1, &dirtBlockVAO);
-    // glGenBuffers(1, &VBO);
-
-    // glBindVertexArray(dirtBlockVAO);
-
-    // // Upload vertex data to opengl
-    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // // Position attribute
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
-    // glEnableVertexAttribArray(0);
-
-    // // Texture position attribute
-    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
 }
 
 void makeShaderProgram()
@@ -1328,7 +1239,6 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Up);
         lastMoveTime = glfwGetTime();
-        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // down (s)
@@ -1336,7 +1246,6 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Down);
         lastMoveTime = glfwGetTime();
-        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // left (a)
@@ -1344,7 +1253,6 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Left);
         lastMoveTime = glfwGetTime();
-        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // right (d)
@@ -1352,7 +1260,6 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Right);
         lastMoveTime = glfwGetTime();
-        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // forward (q)
@@ -1360,7 +1267,6 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Forward);
         lastMoveTime = glfwGetTime();
-        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
     // backward (e)
@@ -1368,7 +1274,6 @@ void processInput(GLFWwindow *window)
     {
         snakeLogic.move(Direction::Backward);
         lastMoveTime = glfwGetTime();
-        std::cout << "Is dead: " << (snakeLogic.isDead() ? "yes" : "no") << '\n';
         return;
     }
 }
@@ -1411,12 +1316,6 @@ int main()
             snakeLogic.reset();
         }
 
-        // if (glfwGetTime() - time_of_last_log >= log_interval)
-        // {
-        //     std::cout << log_interval << " second passed!\n";
-        //     time_of_last_log = glfwGetTime();
-        // }
-
         if (glfwGetTime() - lastAppleRotationTime >= APPLE_ROTATION_INTERVAL)
         {
             appleRotationAngel += 1;
@@ -1426,8 +1325,6 @@ int main()
             {
                 appleRotationAngel = 0.0f;
             }
-
-            // std::cout << "Apple Angel: " << appleRotationAngel << '\n';
         }
 
         processInput(window);
