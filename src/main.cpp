@@ -23,6 +23,7 @@ unsigned int dirtBlockVAO;
 unsigned int wormBodyVAO;
 unsigned int appleVAO;
 unsigned int wormHeadVAO;
+unsigned int dirtWithGrassVAO;
 
 GLFWwindow* window;
 
@@ -93,6 +94,154 @@ bool init()
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
     return true;
+}
+
+void makeDirtWithGrassVAO()
+{
+    const float position[] = 
+    {
+        // Front face
+        // A, C, B
+        -0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        // D, B, C
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+
+        // Back face
+        // E, F, G
+        -0.5f,  0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        // H, G, F
+        0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+
+        // Top face
+        // E, A, F
+        -0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        // B, F, A
+        0.5f,  0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f,  0.5f,
+
+        // Left face
+        // A, E, C
+        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        // G, C, E
+        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        -0.5f,  0.5f, -0.5f,
+
+        // Right face
+        // B, D, F
+        0.5f,  0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f, -0.5f,
+        // H, F, D
+        0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        0.5f, -0.5f,  0.5f,
+
+        // Bottom face
+        // G, H, C
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        // D, C, H
+        0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f, -0.5f
+    };
+
+    const float texCoords[] = 
+    {
+        // Front face
+        // A, C, B
+        0.0f/4.0f, 4.0f/6.0f,
+        0.0f/4.0f, 3.0f/6.0f,
+        1.0f/4.0f, 4.0f/6.0f,
+        // D, B, C
+        1.0f/4.0f, 3.0f/6.0f,
+        1.0f/4.0f, 4.0f/6.0f,
+        0.0f/4.0f, 3.0f/6.0f,
+
+        // Back face
+        // E, F, G
+        1.0f/4.0f, 4.0f/6.0f,
+        0.0f/4.0f, 4.0f/6.0f,
+        1.0f/4.0f, 3.0f/6.0f,
+        // H, G, F
+        0.0f/4.0f, 3.0f/6.0f,
+        1.0f/4.0f, 3.0f/6.0f,
+        0.0f/4.0f, 4.0f/6.0f,
+
+        // Top face
+        // E, A, F
+        1.0f/4.0f, 4.0f/6.0f,
+        1.0f/4.0f, 3.0f/6.0f,
+        2.0f/4.0f, 4.0f/6.0f,
+        // B, F, A
+        2.0f/4.0f, 3.0f/6.0f,
+        2.0f/4.0f, 4.0f/6.0f,
+        1.0f/4.0f, 3.0f/6.0f,
+
+        // Left face
+        // A, E, C
+        1.0f/4.0f, 4.0f/6.0f,
+        0.0f/4.0f, 4.0f/6.0f,
+        1.0f/4.0f, 3.0f/6.0f,
+        // G, C, E
+        0.0f/4.0f, 3.0f/6.0f,
+        1.0f/4.0f, 3.0f/6.0f,
+        0.0f/4.0f, 4.0f/6.0f,
+
+        // Right face
+        // B, D, F
+        0.0f/4.0f, 4.0f/6.0f,
+        0.0f/4.0f, 3.0f/6.0f,
+        1.0f/4.0f, 4.0f/6.0f,
+        // H, F, D
+        1.0f/4.0f, 3.0f/6.0f,
+        1.0f/4.0f, 4.0f/6.0f,
+        0.0f/4.0f, 3.0f/6.0f,
+
+        // Bottom face
+        // G, H, C
+        2.0f/4.0f, 4.0f/6.0f,
+        3.0f/4.0f, 4.0f/6.0f,
+        2.0f/4.0f, 3.0f/6.0f,
+        // D, C, H
+        3.0f/4.0f, 3.0f/6.0f,
+        2.0f/4.0f, 3.0f/6.0f,
+        3.0f/4.0f, 4.0f/6.0f,
+    };
+
+    unsigned int VBO_position, VBO_texCoords;
+
+    glGenVertexArrays(1, &dirtWithGrassVAO);
+    glBindVertexArray(dirtWithGrassVAO);
+
+    glGenBuffers(1, &VBO_position);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_position);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(position), position, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+    glEnableVertexAttribArray(0);
+
+    glGenBuffers(1, &VBO_texCoords);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_texCoords);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 & sizeof(float), 0);
+    glEnableVertexAttribArray(1);
 }
 
 void makeAppleVAO()
@@ -971,6 +1120,15 @@ void drawDirtCube()
 
     for (int y  = STARTING_INDEX; y >= LAST_INDEX - 15; y--)
     {
+        if (y == STARTING_INDEX)
+        {
+            glBindVertexArray(dirtWithGrassVAO);
+        }
+        else
+        {
+            glBindVertexArray(dirtBlockVAO);
+        }
+
         for (int x = STARTING_INDEX + 15; x >= LAST_INDEX - 15; x--)
         {
             for (int z = STARTING_INDEX; z >= LAST_INDEX - 15; z--)
@@ -996,7 +1154,7 @@ void drawDirtCube()
     }
 }
 
-void drawSubCube(int x, int y, int z, Direction dir)
+void drawSnakeBody(int x, int y, int z, Direction dir)
 {
     // BAD ASSUMPTION but: assumes was called AFTER call to drawCube
     // Assumes matrices have been set
@@ -1225,6 +1383,7 @@ int main()
     makeDirtBlockVAOAndVBO();
     makeWormBodyVAO();
     makeAppleVAO();
+    makeDirtWithGrassVAO();
     makeWormHeadVAO();
     makeShaderProgram();
 
@@ -1273,7 +1432,7 @@ int main()
             else 
             {
                 glBindVertexArray(wormBodyVAO);
-                drawSubCube(part.x, part.y, part.z, part.dir);
+                drawSnakeBody(part.x, part.y, part.z, part.dir);
             }
 
         }
