@@ -1049,19 +1049,6 @@ void setSnakePartModel(int x, int y, int z, Direction dir)
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 }
 
-void drawSnakeBody(int x, int y, int z, Direction dir)
-{
-    setSnakePartModel(x,y,z,dir);
-    glDrawArrays(GL_TRIANGLES, 0, 30); 
-}
-
-void drawSnakeHead(int x, int y, int z, Direction dir)
-{
-    glBindVertexArray(wormHeadVAO);
-    setSnakePartModel(x,y,z,dir);
-    glDrawArrays(GL_TRIANGLES, 0, 36); 
-}
-
 void drawApple(int x, int y, int z)
 {
     glBindVertexArray(appleVAO);
@@ -1098,20 +1085,20 @@ void render()
     drawDirtCube();
 
     // Draw snake
-    for (int i = 0; i < snakeLogic.getSnakeSize(); i++)
+
+    // snake head
+    const SnakePart head = snakeLogic.getSnake()[0];
+    setSnakePartModel(head.x, head.y, head.z, head.dir);
+    glBindVertexArray(wormHeadVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // snake body
+    for (int i = 1; i < snakeLogic.getSnakeSize(); i++)
     {
         SnakePart part = snakeLogic.getSnake()[i];
-
-        if (i == 0)
-        {
-            drawSnakeHead(part.x, part.y, part.z, part.dir);
-        }
-        else 
-        {
-            glBindVertexArray(wormBodyVAO);
-            drawSnakeBody(part.x, part.y, part.z, part.dir);
-        }
-
+        setSnakePartModel(part.x, part.y, part.z, part.dir);
+        glBindVertexArray(wormBodyVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 30); 
     }
 
     // Draw apples
