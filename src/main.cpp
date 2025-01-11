@@ -1041,7 +1041,6 @@ void setSnakePartModel(int x, int y, int z, Direction dir, const glm::mat4& pare
 
 void drawApple(int x, int y, int z, const glm::mat4& parent)
 {
-    glBindVertexArray(appleVAO);
 
     glm::mat4 child = glm::mat4(1.0f);
     child = glm::translate(child, glm::vec3(x,y,z));
@@ -1050,6 +1049,7 @@ void drawApple(int x, int y, int z, const glm::mat4& parent)
     glm::mat4 model = glm::mat4(parent * child);
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glBindVertexArray(appleVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36); 
 }
 
