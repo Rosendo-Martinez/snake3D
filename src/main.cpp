@@ -36,6 +36,11 @@ const double DEBUG_TOGGLE_INTERVAL = 0.4f; // seconds
 double lastDebugToggleTime = 0.f; // seconds
 bool isWireFrameModeOn = false;
 
+// apple rotation
+const double APPLE_ROTATION_INTERVAL = 0.01; // seconds
+double lastAppleRotationTime = 0.0f; // seconds
+float appleRotationAngel = 0; // degrees
+
 // Rotation angels for cube (degrees)
 float xAngel = 0; // rotation about x axis (up/down)
 float yAngel = 0; // rotation about y axis (left/right)
@@ -1259,6 +1264,7 @@ void drawApple(int x, int y, int z)
     glm::mat4 child = glm::mat4(1.0f);
     child = glm::translate(child, glm::vec3(x,y,z));
     child = glm::scale(child, glm::vec3(.70f, .70f, .70f));
+    child = glm::rotate(child, glm::radians(appleRotationAngel), glm::vec3(0,1,0));
     glm::mat4 model = glm::mat4(parent * child);
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
@@ -1410,6 +1416,19 @@ int main()
         //     std::cout << log_interval << " second passed!\n";
         //     time_of_last_log = glfwGetTime();
         // }
+
+        if (glfwGetTime() - lastAppleRotationTime >= APPLE_ROTATION_INTERVAL)
+        {
+            appleRotationAngel += 1;
+            lastAppleRotationTime = glfwGetTime();
+
+            if (appleRotationAngel > 360.0f)
+            {
+                appleRotationAngel = 0.0f;
+            }
+
+            // std::cout << "Apple Angel: " << appleRotationAngel << '\n';
+        }
 
         processInput(window);
         // drawCube();
