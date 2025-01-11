@@ -18,12 +18,14 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 unsigned int shaderProgram;
+unsigned int shaderProgramBG;
 unsigned int textureAtlas;
 unsigned int dirtBlockVAO;
 unsigned int wormBodyVAO;
 unsigned int appleVAO;
 unsigned int wormHeadVAO;
 unsigned int dirtWithGrassVAO;
+unsigned int bgVAO;
 
 GLFWwindow* window;
 
@@ -899,57 +901,101 @@ void makeShaderProgram()
     glEnable(GL_DEPTH_TEST);
 }
 
-void makeCubeVAOAndVBO()
+void makeBackGroundShaderProgram()
+{
+    // Draw BG first!
+
+    // Create shader program
+
+    const char *vertexShaderSource = "#version 330 core\n"
+        "layout (location = 0) in vec3 aPos;\n"
+        "out float y;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position = vec4(aPos, 1.0);\n" // MAKE SURE SQUARE IS ALREADY NDC
+        "   y = aPos.y;\n"
+        "}\0";
+    const char *fragmentShaderSource = "#version 330 core\n"
+        "out vec4 FragColor;\n"
+        "in float y;\n"
+        "void main()\n"
+        "{\n"
+        "   FragColor = vec4(0.0,0.0,1.0,1.0) * ((y + 1.0)/2.0) + vec4(1.0,1.0,1.0,1.0) * (1.0 - (y + 1.0)/2.0);\n" // LERP GOES HERE
+        "}\n\0";
+    
+    unsigned int vertexShader, fragmentShader;
+    int success;
+    char infoLog[512];
+
+    // Create vertex shader
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+
+    // If compilation failed, log it
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
+    // Create fragment shader
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glCompileShader(fragmentShader);
+
+    // If compilation failed, log it
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
+    // Create shader program
+    shaderProgramBG = glCreateProgram();
+    glAttachShader(shaderProgramBG, vertexShader);
+    glAttachShader(shaderProgramBG, fragmentShader);
+    glLinkProgram(shaderProgramBG);
+
+    // If linking failed, log it
+    glGetProgramiv(shaderProgramBG, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        glGetProgramInfoLog(shaderProgramBG, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    }
+
+    // Delete shaders
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+}
+
+void makeBGVAO()
 {
     // Square Data 
 
     const float vertices[] = 
     {
-        // front vertices
-        -0.5f,  0.5f, 0.5f, // top left
-         0.5f,  0.5f, 0.5f, // top right
-         0.5f, -0.5f, 0.5f, // bottom right
-        -0.5f, -0.5f, 0.5f, // bottom left
+        -1.0f,  1.0f, 0.0f, // top left
+         1.0f,  1.0f, 0.0f, // top right
+        -1.0f, -1.0f, 0.0f, // bottom left
 
-        // back vertices
-        -0.5f,  0.5f, -0.5f, // top left
-         0.5f,  0.5f, -0.5f, // top right
-         0.5f, -0.5f, -0.5f, // bottom right
-        -0.5f, -0.5f, -0.5f, // bottom left
-    };
-
-    unsigned int indices[] = 
-    {
-        // front face
-        3, 1, 0,
-        3, 2, 1,
-        // back face
-        7, 4, 5,
-        7, 5, 6,
-        // top face
-        0, 5, 4,
-        0, 1, 5,
-        // bottom face
-        3, 7, 6,
-        3, 6, 2,
-        // left face
-        3, 0, 4,
-        3, 4, 7,
-        // right face
-        2, 5, 1,
-        2, 6, 5
+         1.0f, -1.0f, 0.0f, // bottom right
+         1.0f,  1.0f, 0.0f, // top right
+        -1.0f, -1.0f, 0.0f, // bottom left
     };
 
     // Create buffers, and attributes
 
-    unsigned int VAO, VBO, EBO;
+    unsigned int VBO;
 
     // Generate ids
-    glGenVertexArrays(1, &VAO);
+    glGenVertexArrays(1, &bgVAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(bgVAO);
 
     // Upload vertex data to opengl
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -958,10 +1004,6 @@ void makeCubeVAOAndVBO()
     // Position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
-
-    // Upload indices data to opengl
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
 void drawDirtCube(const glm::mat4& parent)
@@ -1212,6 +1254,8 @@ int main()
     makeWormHeadVAO();
     makeShaderProgram();
     loadTextureAtlas();
+    makeBackGroundShaderProgram();
+    makeBGVAO();
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -1236,9 +1280,13 @@ int main()
             }
         }
 
-        processInput(window);
+        // processInput(window);
         
-        render();
+        // render();
+
+        glUseProgram(shaderProgramBG);
+        glBindVertexArray(bgVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
