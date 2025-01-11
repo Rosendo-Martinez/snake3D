@@ -1,7 +1,6 @@
 #include "snakeLogic.h"
 #include <cmath>
 #include <cstdlib>
-#include <iostream>
 #include <time.h>  
 
 SnakePart::SnakePart() : SnakePart(0,0,0)
@@ -152,13 +151,6 @@ void SnakeLogic::reset()
  */
 bool SnakeLogic::isDead()
 {
-    // if snake ate self
-        // is dead
-    // if snake is outside cube
-        // is dead
-    // else
-        // is alive
-
     const SnakePart head = snake[0];
 
     // Check if snake ate itself
@@ -190,13 +182,9 @@ bool SnakeLogic::isDead()
     return false;
 }
 
-
-// generateApple()
-    // apple generation is based on if  player has made enough moves
-    // if they made enough moves, and not max number of apples, generate apple
 void SnakeLogic::generateApple()
 {
-    // Should be called within move();
+    // Should be called within move()
 
     // Can generate apple if player has moved enough times, and not max apples generated.
     if (moveCountSinceLastAppleGen >= appleGenRate && applesSize < MAX_APPLES) // can generate apple
@@ -258,7 +246,7 @@ void SnakeLogic::eatApple()
         return;
     }
 
-    // Check if snake head is at same posistion as apple.
+    // Check if snake head is at same position as apple.
     for (int i = 0; i < applesSize; i++)
     {
         if (snake[0].x == apples[i].x && snake[0].y == apples[i].y && snake[0].z == apples[i].z)
