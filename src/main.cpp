@@ -1012,7 +1012,7 @@ void drawDirtCube()
     }
 }
 
-void drawSnakeBody(int x, int y, int z, Direction dir)
+void setSnakePartModel(int x, int y, int z, Direction dir)
 {
     glm::mat4 parent = glm::mat4(1.0f);
     parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
@@ -1047,46 +1047,18 @@ void drawSnakeBody(int x, int y, int z, Direction dir)
     glm::mat4 model = glm::mat4(parent * child);
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+}
+
+void drawSnakeBody(int x, int y, int z, Direction dir)
+{
+    setSnakePartModel(x,y,z,dir);
     glDrawArrays(GL_TRIANGLES, 0, 30); 
 }
 
 void drawSnakeHead(int x, int y, int z, Direction dir)
 {
     glBindVertexArray(wormHeadVAO);
-
-    glm::mat4 parent = glm::mat4(1.0f);
-    parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
-    parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
-
-    glm::mat4 child = glm::mat4(1.0f);
-    child = glm::translate(child, glm::vec3(x,y,z));
-
-    if (dir == Direction::Left)
-    {
-        child = glm::rotate(child, glm::radians(-90.f), glm::vec3(0,1,0));
-    }
-    else if (dir == Direction::Right)
-    {
-        child = glm::rotate(child, glm::radians(90.f), glm::vec3(0,1,0));
-    }
-    else if (dir == Direction::Up)
-    {
-        child = glm::rotate(child, glm::radians(-90.f), glm::vec3(1,0,0));
-    }
-    else if (dir == Direction::Down)
-    {
-        child = glm::rotate(child, glm::radians(90.f), glm::vec3(1,0,0));
-    }
-    else if (dir == Direction::Backward)
-    {
-        child = glm::rotate(child, glm::radians(180.f), glm::vec3(0,1,0));
-    }
-    // else dir == Forward
-        // no rotation
-
-    glm::mat4 model = glm::mat4(parent * child);
-
-    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    setSnakePartModel(x,y,z,dir);
     glDrawArrays(GL_TRIANGLES, 0, 36); 
 }
 
