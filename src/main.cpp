@@ -1117,7 +1117,7 @@ void drawDirtCube()
     parent = glm::rotate(parent, glm::radians(yAngel), glm::vec3(0.0, 1.0, 0.0));
     parent = glm::rotate(parent, glm::radians(xAngel), glm::vec3(1.0, 0.0, 0.0));
 
-    const unsigned int SIZE_OF_CUBE = 3;
+    const unsigned int SIZE_OF_CUBE = 5;
     const int STARTING_INDEX = SIZE_OF_CUBE - ceil(((double) SIZE_OF_CUBE)/2.0); //positve
     const int LAST_INDEX = STARTING_INDEX - (SIZE_OF_CUBE - 1); // negative
 
@@ -1406,10 +1406,10 @@ int main()
     // render loop
     while (!glfwWindowShouldClose(window))
     {
-        // if (snakeLogic.isDead())
-        // {
-        //     snakeLogic.reset();
-        // }
+        if (snakeLogic.isDead())
+        {
+            snakeLogic.reset();
+        }
 
         // if (glfwGetTime() - time_of_last_log >= log_interval)
         // {

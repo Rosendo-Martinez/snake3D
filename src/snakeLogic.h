@@ -27,7 +27,7 @@ class SnakeLogic
 {
     SnakePart snake[MAX_SNAKE_SIZE];
     int snakeSize = 0;
-    int cubeSize = 3;
+    int cubeSize = 5;
     Apple apples[MAX_APPLES];
     int applesSize = 0;
     int moveCountSinceLastAppleGen = 0;
